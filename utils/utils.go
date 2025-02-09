@@ -1,5 +1,7 @@
 package utils
 
+import "math/big"
+
 func IsPrime(n int) bool {
 	if n < 2 {
 		return false
@@ -65,4 +67,14 @@ func FindFactors(num int, factors map[int][]int) int {
 	factors[num] = uniqueOutput
 
 	return len(factors[num])
+}
+
+func Factorial(n int) *big.Int {
+	result := big.NewInt(1)
+
+	if n == 0 {
+		return result
+	}
+
+	return result.MulRange(2, int64(n))
 }

@@ -1,6 +1,12 @@
 package utils
 
-import "math/big"
+import (
+	"bufio"
+	"math/big"
+	"os"
+	"sort"
+	"strings"
+)
 
 func IsPrime(n int) bool {
 	if n < 2 {
@@ -77,4 +83,54 @@ func Factorial(n int) *big.Int {
 	}
 
 	return result.MulRange(2, int64(n))
+}
+
+func DivisorsSum(num int) int {
+	if num == 1 {
+		return 0
+	}
+
+	result := 1
+
+	for p := 2; p*p <= num; p++ {
+		if num%p == 0 {
+			result += p
+			//avoid adding twice for perfect squares
+			if p != num/p {
+				result += num / p
+			}
+		}
+	}
+
+	return result
+}
+
+func ReadFromFile(fileName string) ([]string, error) {
+	file, err := os.Open(fileName)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	items := []string{}
+
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		//Split by comma
+		splits := strings.Split(line, ",")
+		for _, split := range splits {
+			trimmed := strings.Trim(split, `"`)
+			items = append(items, trimmed)
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+
+	//sort words
+	sort.Strings(items)
+	return items, nil
 }

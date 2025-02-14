@@ -134,3 +134,30 @@ func ReadFromFile(fileName string) ([]string, error) {
 	sort.Strings(items)
 	return items, nil
 }
+
+// Follows Sieve of Eratosthenes
+func FindAllPrimes(limit int) []int {
+	primes := []int{}
+
+	isPrime := make([]bool, limit+1)
+
+	for i := 2; i <= limit; i++ {
+		isPrime[i] = true
+	}
+
+	//mark non-primes
+	for i := 2; i*i <= limit; i++ {
+		if isPrime[i] {
+			for j := i * i; j <= limit; j += i {
+				isPrime[j] = false
+			}
+		}
+	}
+
+	for index, val := range isPrime {
+		if val == true {
+			primes = append(primes, index)
+		}
+	}
+	return primes
+}
